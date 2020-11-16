@@ -28,6 +28,7 @@
 ~~~
 >db.covid.findOne({"pais": "España"},
                 {"total_contagios": 1, "curados": 1, "fallecidos": 1,  "_id": 0})
+                
 {"total_contagios" : 1381218, "curados" : 150376, "fallecidos" : 39345}
 ~~~
 //Esta consulta es especifica de campo, se ejecuta el FindOne y incluyendo campos con ":1" o  ":0", mostramos solo esos resultados de la tabla.
@@ -39,6 +40,7 @@
 > db.covid.find({"continente": "Europa"},
                 {"pais": 1 ,"total_contagios": 1, "curados": 1, "fallecidos": 1, "_id": 0})
                 .sort({pais:1})  
+                
 { "pais" : "Alemania", "total_contagios" : 689146, "curados" : 443621, "fallecidos" : 11408 }
 { "pais" : "Belgica", "total_contagios" : 503182, "curados" : "null", "fallecidos" : 13216 }    
 { "pais" : "Chequia", "total_contagios" : 417181, "curados" : 244005, "fallecidos" : 5028 }     
@@ -64,6 +66,7 @@
 //Esta consulta la hacemos para llamar a todos los paises actuamente investigando la vacuna. Lo hacemos mediantes "status" CON $regex.
 ~~~
 > db.covid.find( { status: { $regex: /Y/ } } )
+
 { "_id" : "001", "continente" : "America", "pais" : "EEUU", "habitantes" : "328000000", "total_contagios" : "50913451", "curados" : "33289404", "fallecidos" : "1263089", "status" : "Y" }
 { "_id" : "004", "continente" : "Europa", "pais" : "Rusia", "habitantes" : "144000000", "total_contagios" : "1817109", "curados" : "null", "fallecidos" : "31161", "status" : "Y" }
 { "_id" : "005", "continente" : "Europa", "pais" : "Francia", "habitantes" : "67000000", "total_contagios" : "1807479", "curados" : "null", "fallecidos" : "40987", "status" : "Y" }
@@ -81,6 +84,7 @@
 //Con la instruccion $or conseguimos filtrar con una u otra condicion, la cual nos traslada la informacion de los habitantes. 
 ~~~
 > db.covid.find({$or:[{ status:"Y"},{habitantes:{$gte:100000000}}]})
+
 { "_id" : "001", "continente" : "America", "pais" : "EEUU", "habitantes" : "328000000", "total_contagios" : "50913451", "curados" : "33289404", "fallecidos" : "1263089", "status" : "Y" }
 { "_id" : "004", "continente" : "Europa", "pais" : "Rusia", "habitantes" : "144000000", "total_contagios" : "1817109", "curados" : "null", "fallecidos" : "31161", "status" : "Y" }
 { "_id" : "005", "continente" : "Europa", "pais" : "Francia", "habitantes" : "67000000", "total_contagios" : "1807479", "curados" : "null", "fallecidos" : "40987", "status" : "Y" }
@@ -98,6 +102,7 @@
 //Esta consulta es un $Regex con filtro null.
 ~~~
 "> db.covid.find( { curados: { $regex: /null/ }})  
+
 { "_id" : "002", "continente" : "Asia", "pais" : "India", "habitantes" : "1.353.000.000", "total_contagios" : "10.191.261", "curados" : "null", "fallecidos" : "238.116" }
 { "_id" : "004", "continente" : "Europa", "pais" : "Rusia", "habitantes" : "144.000.000", "total_contagios" : "1.817.109", "curados" : "null", "fallecidos" : "31.161" }
 { "_id" : "005", "continente" : "Europa", "pais" : "Francia", "habitantes" : "67.000.000", "total_contagios" : "1.807.479", "curados" : "null", "fallecidos" : "40.987" }
@@ -115,6 +120,7 @@
 > db.covid.find({$and:[  {$or: [{total_contagios:{$gt : 5000000}},
                         {habitantes:{$lte: 100000000}}, 
                         {curados:{$not: /null/}}]}]})
+                        
 { "_id" : "001", "continente" : "America", "pais" : "EEUU", "habitantes" : "328000000", "total_contagios" : "50913451", "curados" : "33289404", "fallecidos" : "1263089", "status" : "Y" }
 { "_id" : "003", "continente" : "America", "pais" : "Brasil", "habitantes" : "210000000", "total_contagios" : "5675766", "curados" : "7959406", "fallecidos" : "127059", "status" : "N" }
 { "_id" : "006", "continente" : "Europa", "pais" : "España", "habitantes" : "47000000", "total_contagios" : "1381218", "curados" : "150376", "fallecidos" : "39345", "status" : "Y" }
@@ -143,6 +149,7 @@
 //Esta consulta es para filtrar con la negacion $nin.
 ~~~
 > db.covid.find( { "continente": { $nin: [ "America", "Europa" ]}})
+
 { "_id" : "002", "continente" : "Asia", "pais" : "India", "habitantes" : "1353000000", "total_contagios" : "10191261", "curados" : "null", "fallecidos" : "238116", "status" : "N" }
 { "_id" : "013", "continente" : "Africa", "pais" : "Sudafrica", "habitantes" : "58000000", "total_contagios" : "738525", "curados" : "680726", "fallecidos" : "19845", "status" : "N" }
 { "_id" : "014", "continente" : "Asia", "pais" : "Iran", "habitantes" : "81000000", "total_contagios" : "692949", "curados" : "525641", "fallecidos" : "38749", "status" : "N" }
@@ -167,6 +174,7 @@
 ~~~
 > db.covid.find({$and:[{"continente": { $nin: [ "America", "Europa" ]}},
                 {total_contagios:{$not:{$gt:900000}}}]})
+                
 "{ "_id" : "013", "continente" : "Africa", "pais" : "Sudafrica", "habitantes" : "58000000", "total_contagios" : "738525", "curados" : "680726", "fallecidos" : "19845", "status" : "N" }
 { "_id" : "014", "continente" : "Asia", "pais" : "Iran", "habitantes" : "81000000", "total_contagios" : "692949", "curados" : "525641", "fallecidos" : "38749", "status" : "N" }
 { "_id" : "019", "continente" : "Asia", "pais" : "Irak", "habitantes" : "38430000", "total_contagios" : "501733", "curados" : "432233", "fallecidos" : "11380", "status" : "N" }
@@ -190,6 +198,7 @@
 ~~~
 db.covid.find({$and: [{"continente":{ $nin: ["Asia","Africa"]}}, 
                 {$and: [{total_contagios:{$not: {$lte: "500.0000" }}}]}]})
+                
 { "_id" : "010", "continente" : "America", "pais" : "Mexico", "habitantes" : "130.000.000", "total_contagios" : "967.825", "curados" : "824.355", "fallecidos" : "95.027" }
 { "_id" : "011", "continente" : "Europa", "pais" : "Italia", "habitantes" : "60.000.000", "total_contagios" : "960.373", "curados" : "345.289", "fallecidos" : "41.750" }
 { "_id" : "012", "continente" : "America", "pais" : "Peru", "habitantes" : "32.000.000", "total_contagios" : "923.527", "curados" : "848.346", "fallecidos" : "34.943" }
@@ -207,6 +216,7 @@ db.covid.find({$and: [{"continente":{ $nin: ["Asia","Africa"]}},
 > db.covid.find({"continente":"Africa"},
                 {"pais": 1 ,"total_contagios": 1, "curados": 1, "fallecidos": 1, "_id": 0})
                 .limit(3)
+                
 { "pais" : "Sudafrica", "total_contagios" : 738525, "curados" : 680726, "fallecidos" : 19845 }
 { "pais" : "Libia", "total_contagios" : 69040, "curados" : 40780, "fallecidos" : 944 }
 { "pais" : "Egipto", "total_contagios" : 109422, "curados" : 100439, "fallecidos" : 6380 }
